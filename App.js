@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Button, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, FlatList } from 'react-native';
 
 export default function App() {
-  const [enteredTask, setEnteredTask] = useState('')
-  const [dayTasks, setDayTasks] = useState([])
+  const [enteredGoal, setEnteredGoal] = useState('')
+  const [courseGoals, setCourseGoals] = useState([])
 
-  const taskInputHandler = (enteredText) => {
-    setEnteredTask(enteredText)
+  const goalInputHandler = (enteredText) => {
+    setEnteredGoal(enteredText)
   }
 
-  const addTaskHandler = () => {
-    setDayTasks(currentTasks => [
-      ...currentTasks, enteredTask
+  const addGoalHandler = () => {
+    setCourseGoals(currentGoals => [
+      ...currentGoals, { key: Math.random().toString(), value: enteredGoal }
     ])
   }
 
@@ -19,20 +19,21 @@ export default function App() {
     <View style={styles.screen}>
       <View style={styles.inputContainer}>
         <TextInput 
-        placeholder="New task" 
+        placeholder="New goal" 
         style={styles.input}
-        onChangeText={taskInputHandler}
-        value={enteredTask}
+        onChangeText={goalInputHandler}
+        value={enteredGoal}
         />
-        <Button title="ADD" onPress={addTaskHandler}/>
+        <Button title="ADD" onPress={addGoalHandler}/>
       </View>
-      <ScrollView>
-        {dayTasks.map((task) =>
-          <View key={task} style={styles.listItem}>
-            <Text>{task}</Text>
-          </View>
-        )}
-      </ScrollView>
+      <FlatList 
+      keyExtractor={(item, index) => item.key}
+      data={courseGoals} 
+      renderItem={itemData => (
+        <View style={styles.listItem}>
+          <Text>{itemData.item.value}</Text>
+        </View>
+      )} />
     </View>
   );
 }
@@ -62,22 +63,3 @@ const styles = StyleSheet.create({
     borderWidth: 1
   }
 });
-
-//Using FlatList instead of ScrollView
-
-/* const addTaskHandler = () => {
-  setDayTasks(currentTasks => [
-    ...currentTasks,
-    { key: Math.random().toString(), value: enteredTask }
-  ])
-} */
-
-{/* <FlatList
-      //keyExtractor={(item, index) => item.uid}
-      data={dayTasks} 
-      renderItem={itemData => {
-        <View style={styles.listItem}>
-          <Text>{itemData.item.value}</Text>
-        </View>
-      }}
-      /> */}
